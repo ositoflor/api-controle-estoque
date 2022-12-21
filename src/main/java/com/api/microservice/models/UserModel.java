@@ -12,13 +12,14 @@ public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+    @Column(name = "type_user", nullable = false)
+    private TypeUser typeUser;
     @Column(name = "name", nullable = false)
     private String name;
-    @CPF
-    @Column(name = "cpf", nullable = false,unique = true)
+    @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
     @Email
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
     @Column(name = "password", nullable = false)
     private String password;
@@ -29,6 +30,14 @@ public class UserModel {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public TypeUser getTypeUser() {
+        return typeUser;
+    }
+
+    public void setTypeUser(TypeUser typeUser) {
+        this.typeUser = typeUser;
     }
 
     public String getName() {

@@ -22,6 +22,12 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Object> saveUser(@RequestBody @Valid UserModel user){
+        if (!userService.cpfValidator(user.getCpf())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CPF invalido");
+        }
+        if (userService.exitsByEmail(user.getEmail())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("E-mail informado já existe");
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
     }
 
