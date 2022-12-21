@@ -22,6 +22,8 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Object> saveUser(@RequestBody @Valid UserModel user){
+        String cpfFormated = userService.formatCpf(user.getCpf());
+        user.setCpf(cpfFormated);
         if (!userService.cpfValidator(user.getCpf())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CPF invalido");
         }

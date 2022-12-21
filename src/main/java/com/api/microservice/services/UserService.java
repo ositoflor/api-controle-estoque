@@ -47,4 +47,13 @@ public class UserService {
         }
     }
 
+    public String formatCpf(String cpf) {
+        if (cpf.length() == 14) {
+            return  cpf;
+        }else {
+            Formatter formatrer = new CPFFormatter();
+            String formatedValue = formatrer.format(cpf);
+            return formatedValue;
+        }
+    }
 }
