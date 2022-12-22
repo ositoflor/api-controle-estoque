@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -36,5 +38,24 @@ public class UserController {
     @GetMapping
     public  ResponseEntity<List<UserModel>> getAllUsers(){
         return ResponseEntity.status(HttpStatus.OK).body(userService.fidAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getOneUser(@PathVariable(value = "id")UUID id) {
+        Optional<UserModel> userModelOptional = userService.fingById(id);
+        if (!userModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário informado não existe!");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteUser(@PathVariable(value = "id")UUID id) {
+        Optional<UserModel>  userModelOptional = userService.fingById(id);
+        if (!userModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário informado não existe!");
+        }
+        userService.delete(userModelOptional.get());
+        return ResponseEntity.status(HttpStatus.OK).body("Usuário deletado com sucesso!");
     }
 }
