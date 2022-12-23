@@ -26,7 +26,7 @@ public class UserModel {
 
     @NotBlank
     @Email
-    @Column(name = "email", nullable = false, unique = true, length = 150)
+    @Column(name = "email", nullable = false, length = 150)
     private String email;
 
     @NotBlank

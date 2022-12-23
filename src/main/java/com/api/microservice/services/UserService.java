@@ -2,11 +2,10 @@ package com.api.microservice.services;
 
 import br.com.caelum.stella.format.CPFFormatter;
 import br.com.caelum.stella.format.Formatter;
-import br.com.caelum.stella.format.NITFormatter;
-import br.com.caelum.stella.validation.CPFValidator;
 import com.api.microservice.execptionhandler.UserNotFoundException;
 import com.api.microservice.models.UserModel;
 import com.api.microservice.repositories.UserRepository;
+import com.api.microservice.services.validation.CpfValidate;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,13 +44,8 @@ public class UserService {
         return userRepository.existsByCpf(cpf);
     }
     public boolean cpfValidator(String cpf) {
-        CPFValidator cpfValidator = new CPFValidator();
-        try {
-            cpfValidator.assertValid(cpf);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        boolean cpfIsValid = CpfValidate.isCPF(cpf);
+        return cpfIsValid;
     }
 
     public String formatCpf(String cpf) {
@@ -75,10 +69,4 @@ public class UserService {
         userRepository.delete(userModel);
     }
 
-    public UserModel updateUser(UserModel user, UUID id) {
-        fingById(id);
-        UserModel updateUser = userRepository.getById(id);
-        BeanUtils.copyProperties(user, updateUser, "id");
-        return save(updateUser);
-    }
 }

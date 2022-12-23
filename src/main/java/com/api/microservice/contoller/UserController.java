@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -25,8 +26,17 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Object> saveUser(@RequestBody @Valid UserModel user){
+        if (userService.exitsByEmail(user.getEmail())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageExceptionHandler(new Date(), HttpStatus.NOT_FOUND.value(),"E-mail já cadastrado" ));
+        }
+        if (userService.exitsBycpf(user.getCpf())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageExceptionHandler(new Date(), HttpStatus.NOT_FOUND.value(),"CPF já cadastrado" ));
+        }
         String cpfFormated = userService.formatCpf(user.getCpf());
         user.setCpf(cpfFormated);
+        if (!userService.cpfValidator(user.getCpf())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageExceptionHandler(new Date(), HttpStatus.NOT_FOUND.value(),"CPF invalido" ));
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
     }
 
@@ -48,9 +58,18 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserModel> upDateUser(@PathVariable(value = "id") UUID id,
+    public ResponseEntity<Object> upDateUser(@PathVariable(value = "id") UUID id,
                                              @RequestBody @Valid UserModel user) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(user,id));
+        String cpfFormated = userService.formatCpf(user.getCpf());
+        UserModel userModel = userService.fingById(id);
+        userModel.setCpf(cpfFormated);
+        userModel.setTypeUser(user.getTypeUser());
+        userModel.setEmail(user.getEmail());
+        userModel.setPassword(user.getPassword());
+        if (!userService.cpfValidator(userModel.getCpf())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageExceptionHandler(new Date(), HttpStatus.NOT_FOUND.value(),"CPF invalido" ));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(userService.save(userModel));
     }
 
 }
