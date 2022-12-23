@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.net.ConnectException;
 import java.util.Date;
 import java.util.List;
 
@@ -40,5 +41,11 @@ public class UserControllerAdvice {
         MessageExceptionHandler error = new MessageExceptionHandler(
                 new Date(), HttpStatus.BAD_REQUEST.value(), sb.toString());
         return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConnectException.class)
+    public ResponseEntity handlerExceptionConnectException(ConnectException e) {
+        MessageExceptionHandler error = new MessageExceptionHandler(new Date(), HttpStatus.INTERNAL_SERVER_ERROR.value(), "INTERNAL_SERVER_ERROR");
+        return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
