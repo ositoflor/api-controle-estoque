@@ -4,9 +4,11 @@ import br.com.caelum.stella.format.CPFFormatter;
 import br.com.caelum.stella.format.Formatter;
 import br.com.caelum.stella.format.NITFormatter;
 import br.com.caelum.stella.validation.CPFValidator;
+import com.api.microservice.execptionhandler.UserNotFoundException;
 import com.api.microservice.models.UserModel;
 import com.api.microservice.repositories.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,7 @@ public class UserService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public Object save(UserModel user) {
+    public UserModel save(UserModel user) {
         var encodedPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         return userRepository.save(user);
@@ -39,7 +41,9 @@ public class UserService {
     public boolean exitsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
-
+    public boolean exitsBycpf(String cpf) {
+        return userRepository.existsByCpf(cpf);
+    }
     public boolean cpfValidator(String cpf) {
         CPFValidator cpfValidator = new CPFValidator();
         try {
@@ -52,20 +56,29 @@ public class UserService {
 
     public String formatCpf(String cpf) {
         if (cpf.length() == 14) {
-            return  cpf;
-        }else {
             Formatter formatrer = new CPFFormatter();
-            String formatedValue = formatrer.format(cpf);
-            return formatedValue;
+            String unformatedValue = formatrer.unformat(cpf);
+            return unformatedValue;
+        }else {
+            return  cpf;
         }
     }
 
-    public Optional<UserModel> fingById(UUID id) {
-        return userRepository.findById(id);
+    public UserModel fingById(UUID id) {
+        Optional<UserModel> user = userRepository.findById(id);
+        return user.orElseThrow(() -> new UserNotFoundException());
     }
 
     @Transactional
     public void delete(UserModel userModel) {
+        fingById(userModel.getId());
         userRepository.delete(userModel);
+    }
+
+    public UserModel updateUser(UserModel user, UUID id) {
+        fingById(id);
+        UserModel updateUser = userRepository.getById(id);
+        BeanUtils.copyProperties(user, updateUser, "id");
+        return save(updateUser);
     }
 }

@@ -2,6 +2,8 @@ package com.api.microservice.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.util.UUID;
@@ -14,13 +16,20 @@ public class UserModel {
     private UUID id;
     @Column(name = "type_user", nullable = false)
     private TypeUser typeUser;
-    @Column(name = "name", nullable = false)
+    @NotBlank
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
-    @Column(name = "cpf", nullable = false, unique = true)
+
+    @NotBlank
+    @Column(name = "cpf", nullable = false, unique = true, length = 11)
     private String cpf;
+
+    @NotBlank
     @Email
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true, length = 150)
     private String email;
+
+    @NotBlank
     @Column(name = "password", nullable = false)
     private String password;
 
