@@ -44,7 +44,7 @@ public class UserService {
         return userRepository.existsByCpf(cpf);
     }
     public boolean cpfValidator(String cpf) {
-        boolean cpfIsValid = CpfValidate.isCPF(cpf);
+        boolean cpfIsValid = CpfValidate.isValidCpf(cpf);
         return cpfIsValid;
     }
 

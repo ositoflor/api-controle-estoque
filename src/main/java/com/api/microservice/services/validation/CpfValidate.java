@@ -3,7 +3,7 @@ package com.api.microservice.services.validation;
 import java.util.InputMismatchException;
 
 public class CpfValidate {
-    public static boolean isCPF(String CPF) {
+    public static boolean isValidCpf(String CPF) {
 
         if (CPF.equals("00000000000") ||
                 CPF.equals("11111111111") ||
@@ -15,42 +15,44 @@ public class CpfValidate {
             return(false);
         }
 
-        char dig10, dig11;
-        int sm, i, r, num, peso;
-
         try {
-
-            sm = 0;
-            peso = 10;
-            for (i=0; i<9; i++) {
-                num = (int)(CPF.charAt(i) - 48);
-                sm = sm + (num * peso);
-                peso = peso - 1;
-            }
-
-            r = 11 - (sm % 11);
-            if ((r == 10) || (r == 11))
-                dig10 = '0';
-            else dig10 = (char)(r + 48);
-
-            sm = 0;
-            peso = 11;
-            for(i=0; i<10; i++) {
-                num = (int)(CPF.charAt(i) - 48);
-                sm = sm + (num * peso);
-                peso = peso - 1;
-            }
-
-            r = 11 - (sm % 11);
-            if ((r == 10) || (r == 11))
-                dig11 = '0';
-            else dig11 = (char)(r + 48);
-
-            if ((dig10 == CPF.charAt(9)) && (dig11 == CPF.charAt(10)))
-                return(true);
-            else return(false);
-        } catch (InputMismatchException erro) {
-            return(false);
+            return calcFristDigitCpf(CPF) && calcSecondDigitCpf(CPF);
+        }catch (InputMismatchException error) {
+            return false;
         }
+    }
+
+    public static boolean calcFristDigitCpf(String cpf){
+        int fristDigit = cpf.charAt(9) - 48;
+        int calc = 0;
+        int weight = 10;
+
+        for (int i = 0; i < 9; i++) {
+            calc += (cpf.charAt(i) - 48) * weight;
+            System.out.print("\n Valor " +calc);
+            weight--;
+        }
+        calc = calc * 10 % 11;
+        System.out.print("\n" +calc);
+        System.out.print("\n" +fristDigit);
+         if (calc == fristDigit) return true;
+         return false;
+    }
+
+    public static boolean calcSecondDigitCpf(String cpf){
+        int secondDigit = cpf.charAt(10) - 48;
+        int calc = 0;
+        int weight = 11;
+
+        for (int i = 0; i < 10; i++) {
+            calc += (cpf.charAt(i) - 48) * weight;
+            weight--;
+        }
+        calc = calc * 10 % 11;
+        System.out.print("\n" +calc);
+        System.out.print("\n" +secondDigit);
+
+        if (calc == secondDigit) return true;
+        return false;
     }
 }
