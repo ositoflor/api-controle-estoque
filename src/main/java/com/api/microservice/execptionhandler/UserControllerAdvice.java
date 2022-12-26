@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.ConnectException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 import java.util.List;
 
@@ -47,5 +48,11 @@ public class UserControllerAdvice {
     public ResponseEntity handlerExceptionConnectException(ConnectException e) {
         MessageExceptionHandler error = new MessageExceptionHandler(new Date(), HttpStatus.INTERNAL_SERVER_ERROR.value(), "INTERNAL_SERVER_ERROR");
         return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ResponseEntity sqlIntegrity(ConnectException e) {
+        MessageExceptionHandler error = new MessageExceptionHandler(new Date(), HttpStatus.CONTINUE.value(), "CPF já cadastrado");
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 }

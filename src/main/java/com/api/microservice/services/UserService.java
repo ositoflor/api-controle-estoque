@@ -1,5 +1,4 @@
 package com.api.microservice.services;
-
 import br.com.caelum.stella.format.CPFFormatter;
 import br.com.caelum.stella.format.Formatter;
 import com.api.microservice.execptionhandler.UserNotFoundException;
@@ -7,7 +6,6 @@ import com.api.microservice.models.UserModel;
 import com.api.microservice.repositories.UserRepository;
 import com.api.microservice.services.validation.CpfValidate;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
