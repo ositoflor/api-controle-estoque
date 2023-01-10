@@ -24,16 +24,17 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
+    @PostMapping(value = "/register")
     public ResponseEntity<Object> saveUser(@RequestBody @Valid UserModel user){
         if (userService.exitsByEmail(user.getEmail())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageExceptionHandler(new Date(), HttpStatus.NOT_FOUND.value(),"E-mail já cadastrado" ));
         }
+        String cpfFormated = userService.formatCpf(user.getCpf());
+        user.setCpf(cpfFormated);
         if (userService.exitsBycpf(user.getCpf())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageExceptionHandler(new Date(), HttpStatus.NOT_FOUND.value(),"CPF já cadastrado" ));
         }
-        String cpfFormated = userService.formatCpf(user.getCpf());
-        user.setCpf(cpfFormated);
+
         if (!userService.cpfValidator(user.getCpf())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageExceptionHandler(new Date(), HttpStatus.NOT_FOUND.value(),"CPF invalido" ));
         }
@@ -48,6 +49,11 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserModel> getOneUser(@PathVariable(value = "id")UUID id) {
        return new ResponseEntity<>(userService.fingById(id), HttpStatus.OK);
+    }
+
+   @GetMapping("/login/{email}/password/{password}")
+    public ResponseEntity<Object> loginUser(@PathVariable(value = "email")String email, @PathVariable(value = "password") String password) {
+        return userService.loginUser(email,password);
     }
 
     @DeleteMapping("/{id}")

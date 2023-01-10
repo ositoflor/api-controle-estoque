@@ -33,8 +33,6 @@ public class CpfValidate {
             weight--;
         }
         calc = calc * 10 % 11;
-        System.out.print("\n" +calc);
-        System.out.print("\n" +fristDigit);
          if (calc == fristDigit) return true;
          return false;
     }
@@ -49,8 +47,6 @@ public class CpfValidate {
             weight--;
         }
         calc = calc * 10 % 11;
-        System.out.print("\n" +calc);
-        System.out.print("\n" +secondDigit);
 
         if (calc == secondDigit) return true;
         return false;
