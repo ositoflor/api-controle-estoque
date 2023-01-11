@@ -1,6 +1,7 @@
 package com.api.microservice.services;
 import br.com.caelum.stella.format.CPFFormatter;
 import br.com.caelum.stella.format.Formatter;
+import com.api.microservice.dtos.UserDto;
 import com.api.microservice.execptionhandler.MessageExceptionHandler;
 import com.api.microservice.execptionhandler.UserNotFoundException;
 import com.api.microservice.models.UserModel;

@@ -29,7 +29,6 @@ public class CpfValidate {
 
         for (int i = 0; i < 9; i++) {
             calc += (cpf.charAt(i) - 48) * weight;
-            System.out.print("\n Valor " +calc);
             weight--;
         }
         calc = calc * 10 % 11;
