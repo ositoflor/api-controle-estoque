@@ -1,16 +1,17 @@
 package com.api.microservice.contoller;
 
+import com.api.microservice.dtos.LoginDto;
 import com.api.microservice.execptionhandler.MessageExceptionHandler;
 import com.api.microservice.models.UserModel;
 import com.api.microservice.services.UserService;
-import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -25,7 +26,10 @@ public class UserController {
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<Object> saveUser(@RequestBody @Valid UserModel user){
+    public ResponseEntity<Object> saveUser(@RequestBody @Valid UserModel user,
+                                           @RequestHeader(HttpHeaders.AUTHORIZATION)String token){
+        System.out.print(userService.getTypeUser(token));
+
         if (userService.exitsByEmail(user.getEmail())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageExceptionHandler(new Date(), HttpStatus.NOT_FOUND.value(),"E-mail já cadastrado" ));
         }
@@ -51,9 +55,16 @@ public class UserController {
        return new ResponseEntity<>(userService.fingById(id), HttpStatus.OK);
     }
 
-   @GetMapping("/login/{email}/password/{password}")
-    public ResponseEntity<Object> loginUser(@PathVariable(value = "email")String email, @PathVariable(value = "password") String password) {
-        return userService.loginUser(email,password);
+   @PostMapping("/login")
+    public ResponseEntity<Object> loginUser(@RequestBody LoginDto loginDto) {
+        Object response = userService.loginUser(loginDto);
+
+        if (response == null) {
+            MessageExceptionHandler error = new MessageExceptionHandler(new Date(), HttpStatus.NOT_FOUND.value(), "E-mail ou senha invalido.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/{id}")
