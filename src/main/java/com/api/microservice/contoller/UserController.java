@@ -28,11 +28,11 @@ public class UserController {
     public ResponseEntity<Object> saveUser(@RequestBody @Valid UserModel user,
                                            @RequestHeader(HttpHeaders.AUTHORIZATION)String token){
         if (!userService.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Token Inválido" ));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Token Inválido" ));
         };
 
         if (!userService.getTypeUser(token).equals("ADMIN")){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Usuário sem permisão" ));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Usuário sem permisão" ));
         }
 
         if (userService.exitsByEmail(user.getEmail())){
@@ -53,11 +53,11 @@ public class UserController {
     @GetMapping
     public  ResponseEntity<Object> getAllUsers(@RequestHeader(HttpHeaders.AUTHORIZATION)String token){
         if (!userService.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Token Inválido" ));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Token Inválido" ));
         };
 
         if (!userService.getTypeUser(token).equals("ADMIN")){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Usuário sem permisão" ));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageExceptionHandler(new Date(), HttpStatus.FORBIDDEN.value(), "Usuário sem permisão" ));
         }
         return ResponseEntity.status(HttpStatus.OK).body(userService.fidAll());
     }
@@ -66,11 +66,11 @@ public class UserController {
     public ResponseEntity<Object> getOneUser(@PathVariable(value = "id")UUID id,
                                              @RequestHeader(HttpHeaders.AUTHORIZATION)String token) {
         if (!userService.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Token Inválido" ));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Token Inválido" ));
         };
 
         if (!userService.getTypeUser(token).equals("ADMIN")){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Usuário sem permisão" ));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageExceptionHandler(new Date(), HttpStatus.FORBIDDEN.value(), "Usuário sem permisão" ));
         }
        return new ResponseEntity<>(userService.fingById(id), HttpStatus.OK);
     }
@@ -91,7 +91,7 @@ public class UserController {
     public ResponseEntity<Object> deleteUser(@PathVariable(value = "id")UUID id,
                                                     @RequestHeader(HttpHeaders.AUTHORIZATION)String token) {
         if (!userService.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Token Inválido" ));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Token Inválido" ));
         };
 
         if (!userService.getTypeUser(token).equals("ADMIN")){
@@ -107,11 +107,11 @@ public class UserController {
                                              @RequestBody @Valid UserModel user,
                                              @RequestHeader(HttpHeaders.AUTHORIZATION)String token) {
         if (!userService.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Token Inválido" ));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Token Inválido" ));
         };
 
         if (!userService.getTypeUser(token).equals("ADMIN")){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Usuário sem permisão" ));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageExceptionHandler(new Date(), HttpStatus.FORBIDDEN.value(), "Usuário sem permisão" ));
         }
         String cpfFormated = userService.formatCpf(user.getCpf());
         UserModel userModel = userService.fingById(id);
