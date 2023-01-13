@@ -2,9 +2,9 @@ package com.api.microservice.services;
 
 import br.com.caelum.stella.format.CPFFormatter;
 import br.com.caelum.stella.format.Formatter;
-import com.api.microservice.dtos.LoginDto;
-import com.api.microservice.dtos.UserDto;
-import com.api.microservice.execptionhandler.UserNotFoundException;
+import com.api.microservice.services.dtos.GetuserDto;
+import com.api.microservice.services.dtos.UserDto;
+import com.api.microservice.services.execptionhandler.UserNotFoundException;
 import com.api.microservice.models.UserModel;
 import com.api.microservice.repositories.UserRepository;
 import com.api.microservice.repositories.feing.AuthFeing;
@@ -75,7 +75,7 @@ public class UserService {
         userRepository.delete(userModel);
     }
 
-    public UserDto loginUser(LoginDto loginDto) {
+    public UserDto loginUser(GetuserDto loginDto) {
         UserModel user = userRepository.findByEmail(loginDto.getEmail());
 
         if (user == null) {

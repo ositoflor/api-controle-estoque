@@ -1,4 +1,4 @@
-package com.api.microservice.dtos;
+package com.api.microservice.services.dtos;
 
 import com.api.microservice.models.TypeUser;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.api.microservice.execptionhandler;
+package com.api.microservice.services.execptionhandler;
 
 public class UserNotFoundException extends  RuntimeException{
 }
