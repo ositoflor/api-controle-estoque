@@ -28,7 +28,13 @@ public class UserController {
     @PostMapping(value = "/register")
     public ResponseEntity<Object> saveUser(@RequestBody @Valid UserModel user,
                                            @RequestHeader(HttpHeaders.AUTHORIZATION)String token){
-        System.out.print(userService.getTypeUser(token));
+        if (!userService.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Token Inválido" ));
+        };
+
+        if (!userService.getTypeUser(token).equals("ADMIN")){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Usuário sem permisão para criar" ));
+        }
 
         if (userService.exitsByEmail(user.getEmail())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageExceptionHandler(new Date(), HttpStatus.NOT_FOUND.value(),"E-mail já cadastrado" ));

@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @FeignClient(value = "authFeing", url ="http://localhost:8081" )
 public interface AuthFeing {
 
-    @PostMapping(value = "/auth")
-    Object authUser(@RequestBody UserDto userDto);
-
     @GetMapping(value = "/auth/validatetoken")
     boolean validateToken(@RequestHeader(HttpHeaders.AUTHORIZATION)String token);
 

@@ -75,7 +75,7 @@ public class UserService {
         userRepository.delete(userModel);
     }
 
-    public Object loginUser(LoginDto loginDto) {
+    public UserDto loginUser(LoginDto loginDto) {
         UserModel user = userRepository.findByEmail(loginDto.getEmail());
 
         if (user == null) {
@@ -93,7 +93,7 @@ public class UserService {
         userDto.setName(user.getName());
         userDto.setCpf(user.getCpf());
 
-        return authFeing.authUser(userDto);
+        return userDto;
     }
 
     public boolean validateToken(String token) {
