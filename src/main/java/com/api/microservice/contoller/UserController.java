@@ -32,7 +32,7 @@ public class UserController {
         };
 
         if (!userService.getTypeUser(token).equals("ADMIN")){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Usuário sem permisão" ));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageExceptionHandler(new Date(), HttpStatus.FORBIDDEN.value(), "Usuário sem permisão" ));
         }
 
         if (userService.exitsByEmail(user.getEmail())){
@@ -95,7 +95,7 @@ public class UserController {
         };
 
         if (!userService.getTypeUser(token).equals("ADMIN")){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageExceptionHandler(new Date(), HttpStatus.UNAUTHORIZED.value(), "Usuário sem permisão" ));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageExceptionHandler(new Date(), HttpStatus.FORBIDDEN.value(), "Usuário sem permisão" ));
         }
         UserModel userModel = userService.fingById(id);
         userService.delete(userModel);
