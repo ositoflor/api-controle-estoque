@@ -31,7 +31,7 @@ public class UserControllerAdvice {
         BindingResult result = notValid.getBindingResult();
         List<FieldError> fieldErrors = result.getFieldErrors();
 
-        StringBuilder sb = new StringBuilder("Os campos seguintes não pode ser nulos:");
+        StringBuilder sb = new StringBuilder("Os campos seguintes não podem ser nulos:");
         for (FieldError fieldError : fieldErrors) {
             sb.append(" | ");
             sb.append(" -> ");
