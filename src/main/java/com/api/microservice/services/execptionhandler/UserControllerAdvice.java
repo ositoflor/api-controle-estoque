@@ -1,6 +1,5 @@
 package com.api.microservice.services.execptionhandler;
 
-import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -50,9 +49,4 @@ public class UserControllerAdvice {
         return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(FeignException.class)
-    public ResponseEntity handlerFeignExcption(FeignException e) {
-        MessageExceptionHandler error = new MessageExceptionHandler(new Date(), HttpStatus.NOT_FOUND.value(), "Token não informado");
-        return new ResponseEntity(error, HttpStatus.NOT_FOUND);
-    }
 }

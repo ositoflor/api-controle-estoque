@@ -2,17 +2,22 @@ package com.api.microservice.services;
 
 import br.com.caelum.stella.format.CPFFormatter;
 import br.com.caelum.stella.format.Formatter;
+import com.api.microservice.repositories.client.AuthClient;
 import com.api.microservice.services.dtos.GetuserDto;
 import com.api.microservice.services.dtos.UserDto;
 import com.api.microservice.services.execptionhandler.UserNotFoundException;
 import com.api.microservice.models.UserModel;
 import com.api.microservice.repositories.UserRepository;
-import com.api.microservice.repositories.feing.AuthFeing;
 import com.api.microservice.services.validation.CpfValidate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -26,7 +31,7 @@ public class UserService {
     final PasswordEncoder passwordEncoder;
 
     @Autowired
-    AuthFeing authFeing;
+    AuthClient authClient;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -97,10 +102,10 @@ public class UserService {
     }
 
     public boolean validateToken(String token) {
-        return authFeing.validateToken(token);
+        return authClient.validToken(token);
     }
 
     public String getTypeUser(String token) {
-        return authFeing.getTypeUser(token);
+        return authClient.getTypeUser(token);
     }
 }
