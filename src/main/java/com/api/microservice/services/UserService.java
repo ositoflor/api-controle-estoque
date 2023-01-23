@@ -1,111 +1,22 @@
 package com.api.microservice.services;
 
-import br.com.caelum.stella.format.CPFFormatter;
-import br.com.caelum.stella.format.Formatter;
-import com.api.microservice.repositories.client.AuthClient;
+import com.api.microservice.models.UserModel;
 import com.api.microservice.services.dtos.GetuserDto;
 import com.api.microservice.services.dtos.UserDto;
-import com.api.microservice.services.execptionhandler.UserNotFoundException;
-import com.api.microservice.models.UserModel;
-import com.api.microservice.repositories.UserRepository;
-import com.api.microservice.services.validation.CpfValidate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-@Service
-public class UserService {
+public interface UserService {
 
-    final UserRepository userRepository;
-    final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    AuthClient authClient;
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = new BCryptPasswordEncoder();
-    }
-
-    public UserModel save(UserModel user) {
-        var encodedPassword = this.passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-        return userRepository.save(user);
-    }
-
-    public List<UserModel> fidAll() {
-        return userRepository.findAll();
-    }
-
-    public Boolean exitsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-    public boolean exitsBycpf(String cpf) {
-        return userRepository.existsByCpf(cpf);
-    }
-    public boolean cpfValidator(String cpf) {
-        boolean cpfIsValid = CpfValidate.isValidCpf(cpf);
-        return cpfIsValid;
-    }
-
-    public String formatCpf(String cpf) {
-        if (cpf.length() == 14) {
-            Formatter formatrer = new CPFFormatter();
-            String unformatedValue = formatrer.unformat(cpf);
-            return unformatedValue;
-        }else {
-            return  cpf;
-        }
-    }
-
-    public UserModel fingById(UUID id) {
-        Optional<UserModel> user = userRepository.findById(id);
-        return user.orElseThrow(() -> new UserNotFoundException());
-    }
-
-    @Transactional
-    public void delete(UserModel userModel) {
-        fingById(userModel.getId());
-        userRepository.delete(userModel);
-    }
-
-    public UserDto loginUser(GetuserDto loginDto) {
-        UserModel user = userRepository.findByEmail(loginDto.getEmail());
-
-        if (user == null) {
-            return null;
-        }
-
-        boolean isValidPassword = passwordEncoder.matches(loginDto.getPassword(), user.getPassword());
-
-        if (!isValidPassword) {
-            return null;
-        }
-        UserDto userDto = new UserDto();
-        userDto.setEmail(user.getEmail());
-        userDto.setTypeUser(user.getTypeUser());
-        userDto.setName(user.getName());
-        userDto.setCpf(user.getCpf());
-
-        return userDto;
-    }
-
-    public boolean validateToken(String token) {
-        return authClient.validToken(token);
-    }
-
-    public String getTypeUser(String token) {
-        return authClient.getTypeUser(token);
-    }
+    UserModel save(UserModel user);
+    List<UserModel> fidAll();
+    Boolean exitsByEmail(String email);
+    boolean cpfValidator(String cpf);
+    String formatCpf(String cpf);
+    UserModel fingById(UUID id);
+    void delete(UserModel userModel);
+    UserDto loginUser(GetuserDto loginDto);
+    boolean validateToken(String token);
+    String getTypeUser(String token);
 }

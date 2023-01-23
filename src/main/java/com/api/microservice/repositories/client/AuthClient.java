@@ -1,5 +1,6 @@
 package com.api.microservice.repositories.client;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -8,8 +9,8 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class AuthClient {
-
-    String URI = "http://localhost:8081/auth/";
+    @Value(value = "${uri.auth}")
+    String URI;
     RestTemplate restTemplate = new RestTemplate();
 
     public boolean validToken(String token) {

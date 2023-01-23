@@ -3,7 +3,7 @@ package com.api.microservice.contoller;
 import com.api.microservice.services.dtos.GetuserDto;
 import com.api.microservice.services.execptionhandler.MessageExceptionHandler;
 import com.api.microservice.models.UserModel;
-import com.api.microservice.services.UserService;
+import com.api.microservice.services.impl.UserServiceImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,9 @@ import java.util.UUID;
 @RequestMapping("user")
 public class UserController {
 
-    final UserService userService;
+    final UserServiceImpl userService;
 
-    public  UserController(UserService userService) {
+    public  UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
